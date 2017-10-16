@@ -1,21 +1,36 @@
 #include <Arduino.h>
 #include "DigiKeyboard.h"
 
-// the setup routine runs once when you press reset:
+#define LED 1
+#define BTN1 5
+#define BTN2 6
+
+int BTN1_state = 0;
+int BTN2_state = 0;
+
 void setup() {
-    // initialize the digital pin as an output.
-    pinMode(0, OUTPUT); //LED on Model B
-    pinMode(1, OUTPUT); //LED on Model A  or Pro
+    pinMode(LED, OUTPUT);
+    pinMode(BTN1, INPUT);
+    pinMode(BTN2, INPUT);
+    digitalWrite(BTN1,LOW);
+    digitalWrite(BTN2,LOW);
 }
 
-// the loop routine runs over and over again forever:
 void loop() {
     DigiKeyboard.sendKeyStroke(0);
-    DigiKeyboard.println("Hello");
-    digitalWrite(0, HIGH);   // turn the LED on (HIGH is the voltage level)
-    digitalWrite(1, HIGH);
-    delay(100);               // wait for a second
-    digitalWrite(0, LOW);    // turn the LED off by making the voltage LOW
-    digitalWrite(1, LOW);
-    delay(200);               // wait for a second
+    BTN1_state = digitalRead(BTN1);
+    BTN2_state = digitalRead(BTN2);
+
+    if (BTN1_state == HIGH) {
+        DigiKeyboard.sendKeyPress(26);
+        DigiKeyboard.println("pressed BTN1");
+        digitalWrite(LED, HIGH);
+    }
+    if (BTN2_state == HIGH) {
+        DigiKeyboard.sendKeyPress(27);
+        DigiKeyboard.println("pressed BTN2");
+        digitalWrite(LED, HIGH);
+    }
+    delay(100);
+    digitalWrite(LED, LOW);
 }
